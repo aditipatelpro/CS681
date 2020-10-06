@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="hw01" basedir="." default="clean">
+    <property environment="env" />
+    <echo message="JUNIT: ${env.JUNIT_HOME}" />
+    <echo message="ANT_HOME: ${env.ANT_HOME}" />
+    <property name="src" location="src" />
+    <property name="bin" location="bin" />
+    <path id="classpath">
+        <pathelement location="bin" />
+        <fileset dir="${env.JUNIT_HOME}" includes="junit*.jar" excludes="org.junit.vintage.*.jar" />
+        <fileset dir="${env.JUNIT_HOME}" includes="org.opentest4j*.jar" />
+        <fileset dir="${env.JUNIT_HOME}" includes="org.apiguardian*.jar" />
+    </path>
+    <echo message="${toString:classpath}" />
+    <target name="init">
+        <mkdir dir="${bin}" />
+    </target>
+    <target name="test" depends="init">
+        <javac srcdir="${src}" destdir="${bin}" includeAntRuntime="no">
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+    <target name="clean" depends="test">
+        <delete includeemptydirs="true">
+            <fileset dir="${bin}/edu/umb/cs681/hw01" includes="**/*" />
+        </delete>
+    </target>
+</project>
