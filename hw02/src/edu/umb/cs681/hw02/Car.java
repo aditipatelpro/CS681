@@ -1,6 +1,10 @@
 package edu.umb.cs681.hw02;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Comparator;
+
 
 public class Car {
 
@@ -51,13 +55,34 @@ public class Car {
 		return this.dominationCount;
 	}
 
-	public static void main(String[] args) {
-		Car car = new Car("Tesla", "Model S", 20, 2019, 100000);
-		System.out.println("Make: " + car.getMake());
-		System.out.println("Model: " + car.getModel());
-		System.out.println("Mileage: " + car.getMileage());
-		System.out.println("Year: " + car.getYear());
-		System.out.println("Price: " + car.getPrice());
+	@Override
+	public String toString() {
 
+		return this.make +" "+ this.model+" "+ this.mileage+" "+this.year+" "+this.price;
+	}
+
+	public static void main(String[] args) {
+
+		List<Car> carList = new ArrayList<Car>();
+		carList.add(new Car("Tesla", "X", 90, 2019, 80000));
+		carList.add(new Car("Tesla", "Y", 100, 2018, 50000));
+		carList.add(new Car("Ford", "Mustang", 90, 2020, 45000));
+		carList.add(new Car("Audi", "A7", 25, 2020, 70000));
+
+		System.out.println("Cars sorted by Year:");
+		List<Car> sortedYearWise=carList.stream().sorted(Comparator.comparingInt(Car::getYear)).collect(Collectors.toList());
+		sortedYearWise.forEach(System.out::println);
+
+		System.out.println("Cars sorted by Mileage:");
+		List<Car> sortedMileageWise=carList.stream().sorted(Comparator.comparingInt(Car::getMileage)).collect(Collectors.toList());
+		sortedMileageWise.forEach(System.out::println);
+
+		System.out.println("Cars sorted by Price:");
+		List<Car> sortedPriceWise=carList.stream().sorted(Comparator.comparingInt(Car::getPrice)).collect(Collectors.toList());
+		sortedPriceWise.forEach(System.out::println);
+
+		System.out.println("Cars sorted by Domination Count:");
+		List<Car> sortedDominationCountWise=carList.stream().sorted(Comparator.comparingInt(Car::getDominationCount)).collect(Collectors.toList());
+		sortedDominationCountWise.forEach(System.out::println);
 	}
 }
