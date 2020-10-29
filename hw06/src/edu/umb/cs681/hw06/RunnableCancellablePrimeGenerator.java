@@ -12,11 +12,8 @@ public class RunnableCancellablePrimeGenerator extends RunnablePrimeGenerator {
 
 	public void setDone() {
 		lock.lock();
-		try {
-			done = false;
-		} finally {
-			lock.unlock();
-		}
+		try { done = false; }
+		finally { lock.unlock(); }
 	}
 
 	public void generatePrimes() {
@@ -24,12 +21,8 @@ public class RunnableCancellablePrimeGenerator extends RunnablePrimeGenerator {
 			lock.lock();
 			// Stop generating prime numbers if done==true
 			try {
-				if (done) {
-					break;
-				}
-				if (isPrime(n)) {
-					this.primes.add(n);
-				}
+				if (done) { break; }
+				if (isPrime(n)) { this.primes.add(n); }
 			} finally {
 				lock.unlock();
 			}
