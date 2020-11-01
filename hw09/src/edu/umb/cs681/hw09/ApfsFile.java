@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 public class ApfsFile extends ApfsElement {
 
-	public ApfsFile(ApfsDirectory parent, String name, int size, LocalDateTime creationTime, String ownerName,
-			LocalDateTime modifiedTime) {
-		super(parent, name, size, creationTime, ownerName, modifiedTime);
+	public ApfsFile(ApfsDirectory parent, String name, int size) {
+		super(parent, name, size, LocalDateTime.now());
 	}
 
 	public boolean isDirectory() {
@@ -20,5 +19,4 @@ public class ApfsFile extends ApfsElement {
 	public boolean isLink() {
 		return false;
 	}
-
 }

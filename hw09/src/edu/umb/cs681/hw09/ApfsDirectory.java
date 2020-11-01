@@ -5,42 +5,44 @@ import java.util.LinkedList;
 
 public class ApfsDirectory extends ApfsElement {
 
-	private LinkedList<ApfsElement> children = new LinkedList<ApfsElement>();
+	private LinkedList<ApfsElement> children;
 	private LinkedList<ApfsFile> files = new LinkedList<ApfsFile>();
-	private LinkedList<ApfsDirectory> subdir = new LinkedList<ApfsDirectory>();
+	private LinkedList<ApfsDirectory> subdirectory = new LinkedList<ApfsDirectory>();
 
-	public ApfsDirectory(ApfsDirectory parent, String name, int size, LocalDateTime creationTime, String ownerName,
-			LocalDateTime modifiedTime) {
-		super(parent, name, 0, creationTime, ownerName, modifiedTime);
+	public ApfsDirectory(ApfsDirectory parent, String name) {
+		super(parent, name, 0, LocalDateTime.now());
+		this.children = new LinkedList<>();
 	}
 
-	public LinkedList<ApfsElement> getChildren() {
-		return this.children;
-	}
+	@Override
+	public boolean isDirectory() { return true; }
+
+	@Override
+	public boolean isFile() { return false; }
+
+	@Override
+	public boolean isLink() { return false; }
+
+	public LinkedList<ApfsElement> getChildren() { return this.children; }
 
 	public void appendChild(ApfsElement child) {
 		this.children.add(child);
 		child.setParent(this);
 	}
 
-	public int countChildren() {
-		return this.children.size();
-	}
+	public int countChildren() { return this.children.size(); }
 
-	public boolean isDirectory() {
-		return true;
-	}
-
-	public boolean isFile() {
-		return false;
-	}
-
-	public boolean isLink() {
-		return false;
+	public LinkedList<ApfsDirectory> getSubDirectories() {
+		for (ApfsElement element: this.children) {
+			if (element.isDirectory()) {
+				subdirectory.add((ApfsDirectory) element);
+			}
+		}
+		return subdirectory;
 	}
 
 	public LinkedList<ApfsFile> getFiles() {
-		for (ApfsElement element : children) {
+		for (ApfsElement element: this.children) {
 			if (element.isFile()) {
 				files.add((ApfsFile) element);
 			}
@@ -48,25 +50,18 @@ public class ApfsDirectory extends ApfsElement {
 		return files;
 	}
 
-	public LinkedList<ApfsDirectory> getSubDirectories() {
-		for (FSElement element : children) {
-			if (element.isDirectory()) {
-				subdir.add((ApfsDirectory) element);
-			}
-		}
-		return subdir;
-	}
-
 	public int getTotalSize() {
 		int totalSize = 0;
-		for (FSElement element : children) {
+		for (ApfsElement element : this.children) {
 			if (element.isDirectory()) {
-				totalSize += ((ApfsDirectory) element).getTotalSize();
-			} else {
+				ApfsDirectory subDirectory = (ApfsDirectory) element;
+				totalSize += subDirectory.getTotalSize();
+
+			} else if (element.isFile()) {
 				totalSize += element.getSize();
 			}
+
 		}
 		return totalSize;
 	}
-
 }

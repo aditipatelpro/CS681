@@ -1,65 +1,54 @@
 package edu.umb.cs681.hw09;
 
-import java.time.LocalDateTime;
+import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class FSElement {
-	private String name;
-	private int size;
-	private LocalDateTime creationTime;
-	private FSElement parent;
 
-	public FSElement(FSElement parent, String name, int size, LocalDateTime creationTime) {
-		if (parent != null) {
-			parent.appendChild(this);
-		} else {
-			this.parent = null;
-		}
-		this.setName(name);
-		this.setSize(size);
-		this.setCreationTime(creationTime);
-	}
+	protected String name;
+	protected int size;
+	protected ReentrantLock lock = new ReentrantLock();
 
-	protected abstract void appendChild(FSElement parent);
-
-	abstract public boolean isDirectory();
-
-	abstract public boolean isFile();
-
-	abstract public boolean isLink();
-
-	public FSElement getParent() {
-		return this.parent;
-	}
-
-	public void setParent(FSElement parent) {
-		this.parent = parent;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
+	public FSElement(FSElement parent, String name, int size) {
 		this.name = name;
+		this.size = size;
 	}
+
+	public abstract boolean isDirectory();
+	public abstract boolean isFile();
 
 	public int getSize() {
-		return this.size;
+		lock.lock();
+		try {
+			return this.size;
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	public void setSize(int size) {
-		if (isDirectory()) {
-			this.size = 0;
-		} else {
+		lock.lock();
+		try {
 			this.size = size;
+		} finally {
+			lock.unlock();
 		}
 	}
 
-	public LocalDateTime getCreationTime() {
-		return creationTime;
+	public String getName() {
+		lock.lock();
+		try {
+			return name;
+		} finally {
+			lock.unlock();
+		}
 	}
 
-	public void setCreationTime(LocalDateTime creationTime) {
-		this.creationTime = creationTime;
+	public void setName(String name) {
+		lock.lock();
+		try {
+			this.name = name;
+		} finally {
+			lock.unlock();
+		}
 	}
 }

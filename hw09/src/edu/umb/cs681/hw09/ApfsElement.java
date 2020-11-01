@@ -1,54 +1,84 @@
 package edu.umb.cs681.hw09;
 
+import edu.umb.cs681.hw09.FSElement;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 
-public class ApfsElement extends FSElement {
-	private String ownerName;
-	private LocalDateTime modifiedTime;
+public abstract class ApfsElement extends FSElement {
+
+	private LocalDateTime creationTime;
+	private LocalDateTime lastModifiedTime;
 	private LinkedList<ApfsElement> ApfsChildren = new LinkedList<ApfsElement>();
 
-	public ApfsElement(ApfsDirectory parent, String name, int size, LocalDateTime creationTime, String ownerName,
-			LocalDateTime modifiedTime) {
-		super(parent, name, size, creationTime);
-		this.ownerName = ownerName;
-		this.modifiedTime = modifiedTime;
+	protected ApfsDirectory parent;
+
+	public ApfsElement(ApfsDirectory parent, String name, int size, LocalDateTime creationTime) {
+		super(parent, name, size);
+		this.parent = parent;
+		this.creationTime = creationTime;
 	}
 
-	public LinkedList<ApfsElement> getChildren() {
-		return this.ApfsChildren;
+	public abstract boolean isLink();
+	public int getSize() {
+		lock.lock();
+		try {
+			return this.size;
+		} finally {
+			lock.unlock();
+		}
 	}
 
-	public void appendChild(FSElement child) {
-		this.ApfsChildren.add((ApfsElement) child);
+	public String getName() {
+		lock.lock();
+		try {
+			return this.name;
+		} finally {
+			lock.unlock();
+		}
 	}
 
-	public boolean isDirectory() {
-		return false;
-	};
-
-	public boolean isFile() {
-		return false;
+	public LocalDateTime getCreationTime() {
+		return this.creationTime;
 	}
 
-	public boolean isLink() {
-		return false;
+	public LocalDateTime getLastModifiedTime() {
+		lock.lock();
+		try {
+			return this.lastModifiedTime;
+		} finally {
+			lock.unlock();
+		}
+
 	}
 
-	public String getOwnerName() {
-		return ownerName;
+	public void setLastModifiedTime(LocalDateTime time) {
+		lock.lock();
+		try {
+			this.lastModifiedTime = time;
+		} finally {
+			lock.unlock();
+		}
 	}
 
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
+	public LinkedList<ApfsElement> getChildren() { return this.ApfsChildren; }
+
+	public void appendChild(FSElement child) { this.ApfsChildren.add((ApfsElement) child); }
+
+	public ApfsDirectory getParent() {
+		lock.lock();
+		try {
+			return this.parent;
+		} finally {
+			lock.unlock();
+		}
 	}
 
-	public LocalDateTime getModifiedDate() {
-		return modifiedTime;
+	public void setParent(ApfsDirectory parent) {
+		lock.lock();
+		try {
+			this.parent = parent;
+		} finally {
+			lock.unlock();
+		}
 	}
-
-	public void setModifiedDate(LocalDateTime modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
-
 }
