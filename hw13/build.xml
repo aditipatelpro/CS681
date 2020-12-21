@@ -29,6 +29,6 @@
         </javac>
     </target>
     <target name="run" depends="compile">
-        <java classname="edu.umb.cs681.hw13.Requesthandler" classpathref="classpath" fork="true" />
+        <java classname="edu.umb.cs681.hw13.RequestHandler" classpathref="classpath" fork="true" />
     </target>
 </project>

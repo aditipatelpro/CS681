@@ -14,10 +14,10 @@ public class MultipleThread implements Runnable {
 
     public static void main(String[] args) {
     	
-    	Thread T1 = new Thread(new MultiThread());
-		Thread T2 = new Thread(new MultiThread());
-		Thread T3 = new Thread(new MultiThread());
-		Thread T4 = new Thread(new MultiThread());
+    	Thread T1 = new Thread(new MultipleThread());
+		Thread T2 = new Thread(new MultipleThread());
+		Thread T3 = new Thread(new MultipleThread());
+		Thread T4 = new Thread(new MultipleThread());
 		
 		T1.start();
 		T2.start();
